@@ -30,49 +30,64 @@ Decolor::Decolor(string filename, string window_name)
     this->max_line_gap = 1; // maximum gap in pixels between connectable line segments
     this->window_name = window_name;
     this->blur_size = 3;
+    this->edge_line_width = 2;
+    this->contour_line_width = 2;
 
     this->filename = filename;
     this->image = imread(filename, 1);
-    this->output_blank = Mat::zeros( this->image.size(), CV_8UC3 );
-    this->output_blank.setTo(Scalar(255,255,255));
+    this->state_ok = !!(this->image.data);
+    if (this->state_ok) {
+        this->output_blank = Mat::zeros( this->image.size(), CV_8UC3 );
+        this->output_blank.setTo(Scalar(255,255,255));
 
-    this->controls = Mat::zeros( Size(320, 160), CV_8UC3 );
-    this->controls.setTo(Scalar(255,255,255));
+        this->controls = Mat::zeros( Size(320, 160), CV_8UC3 );
+        this->controls.setTo(Scalar(255,255,255));
 
 
-    this->edge_line_width = 2;
-    this->contour_line_width = 2;
-    Blank();
-    GrayBlur();
-    Edges();
-    Lines();
-    Contours();
+        Blank();
+        GrayBlur();
+        Edges();
+        Lines();
+        Contours();
+    }
  //   namedWindow(window_name, WINDOW_AUTOSIZE);
 //    Display();
 //    SetupTrackbarMaps();
 
-    this->state_ok = !!(this->image.data);  
+
 }
 
 void Decolor::GrayBlur()
 {
+    if (!ok()) {
+        return;
+    }
     cvtColor( image, img_gray, COLOR_BGR2GRAY );
     blur( img_gray, img_blur, Size(this->blur_size, this->blur_size) );
 }
 
 void Decolor::Edges()
 {
+    if (!ok()) {
+        return;
+    }
     Canny( img_blur, img_edges, low_edge_threshold, high_edge_threshold);
 }
 
 void Decolor::Blank()
 {
+    if (!ok()) {
+        return;
+    }
     output = output_blank;
 }
 
 
 void Decolor::Lines()
 {
+    if (!ok()) {
+        return;
+    }
     HoughLinesP(img_edges, lines, rho, theta, threshold, min_line_length, max_line_gap);
 
     const int alpha = 1000;
@@ -85,6 +100,9 @@ void Decolor::Lines()
 
 void Decolor::Contours()
 {
+    if (!ok()) {
+        return;
+    }
     findContours( img_edges, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE );
     for( size_t i = 0; i< contours.size(); i++ )
     {
@@ -94,6 +112,9 @@ void Decolor::Contours()
 }
 void Decolor::Update()
 {
+    if (!ok()) {
+        return;
+    }
     output_blank.setTo(Scalar(255,255,255));
     Blank();
     GrayBlur();
@@ -104,6 +125,9 @@ void Decolor::Update()
 
 void Decolor::Display()
 {
+    if (!ok()) {
+        return;
+    }
     Mat output2;
     imshow(window_name, image);
     imshow("output", output);
@@ -111,6 +135,9 @@ void Decolor::Display()
 }
 void Decolor::DisplayOutput()
 {
+    if (!ok()) {
+        return;
+    }
     imshow("output", output);
 }
 
@@ -173,11 +200,17 @@ Decolor::~Decolor()
 #ifdef USE_QT
 void Decolor::Display(QImage &qOriginal, QImage &qProcessed)
 {
+    if (!ok()) {
+        return;
+    }
     qOriginal = QImage((uchar*)image.data, image.cols, image.rows, image.step, QImage::Format_RGB888);
     qProcessed = QImage((uchar*)output.data, output.cols, output.rows, output.step, QImage::Format_RGB888);
 }
 void Decolor::DisplayProcessed(QImage &qProcessed)
 {
+    if (!ok()) {
+        return;
+    }
     qProcessed = QImage((uchar*)output.data, output.cols, output.rows, output.step, QImage::Format_RGB888);
 }
 #endif

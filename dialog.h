@@ -15,6 +15,7 @@ class Dialog : public QDialog
 public:
     Dialog(QWidget *parent = nullptr);
     ~Dialog();
+    void showEvent(QShowEvent *);
 
 private slots:
     void on_btn_open_file_clicked();
@@ -39,6 +40,6 @@ private slots:
 private:
     Ui::Dialog *ui;
     void showProcessed();
-    void initDecolor(QString filename);
+    bool initDecolor(QString filename);
 };
 #endif // DIALOG_H

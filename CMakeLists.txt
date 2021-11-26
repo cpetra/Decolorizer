@@ -10,10 +10,11 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
+#d: d:\work\opencv\build\install\OpenCVConfig.cmake
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets  REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets  REQUIRED)
-find_package( OpenCV REQUIRED )
+find_package(Qt6PrintSupport REQUIRED)
+find_package( OpenCV REQUIRED PATHS "d:/work/opencv/build/install")
 
 set(PROJECT_SOURCES
         main.cpp
@@ -47,7 +48,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(Decolorizer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} )
+target_link_libraries(Decolorizer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::PrintSupport )
 
 set_target_properties(Decolorizer PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
