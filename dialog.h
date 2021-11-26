@@ -2,6 +2,7 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include <QLabel>
 #include "Decolor.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -37,9 +38,12 @@ private slots:
 
     void on_btn_print_clicked();
 
+    void on_cb_gaussian_toggled(bool checked);
+
 private:
     Ui::Dialog *ui;
     void showProcessed();
+    void displayImage(const Mat *pmat, QLabel *pwnd);
     bool initDecolor(QString filename);
 };
 #endif // DIALOG_H

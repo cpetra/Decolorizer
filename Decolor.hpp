@@ -13,9 +13,6 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 
-#ifdef USE_QT
-#include <QApplication>
-#endif
 
 using namespace cv;
 using namespace std;
@@ -35,12 +32,12 @@ private:
     Mat img_edges;      // for displaying the edges
     Mat output_blank;   // use this as canvas for the output
     Mat output;
-#ifndef _USE_QT
     Mat controls;
-#endif
     string filename;
     string window_name;
+    bool output_is_shown;
 
+    bool b_gaussian;
     int blur_size;      // blur algorithm size
 
     bool state_ok = false;
@@ -51,7 +48,6 @@ private:
 
     // lines detection
     double rho;
-    double theta;
     int threshold;
     int min_line_length;
     int max_line_gap;
@@ -69,36 +65,36 @@ private:
     void SetupTrackbarMaps();
     void SetupTrackbar(string name, int* value, int max);
 
-
-
-public:
-    Decolor(string filename, string display_window);
-    void GrayBlur();
+private:
+    void defaults();
+    void blank();
+    void doContours();
+    void grayBlur();
     void Edges();
     void Lines();
-    void Contours();
-    void Display();
-    void DisplayOutput();
-    void Blank();
-    void Update();
-    void SetTrackbar(string name, int min, int max);
+public:
+    Decolor(string filename, string display_window);
+    void display();
+    void displayOutput();
+    void update();
+    void save(string filename);
+    void setTrackbar(string name, int min, int max);
     bool ok() {return state_ok;}
     ~Decolor();
-#ifdef USE_QT
-    void Display(QImage &qOrig, QImage &qProcessed);
-    void DisplayProcessed(QImage &qProcessed);
-#endif
+    void getImages(const Mat ** image, const Mat ** output);
+    void getOutputImage(const Mat ** const image);
     // Interface parts;
-    void SetBlur(int blur);
-    void SetLineWidth(int width);
-    void SetContourWidth(int width);
-    void SetHighEdge(int value);
-    void SetLowEdge(int value);
+    void setBlur(int blur);
+    void setLineWidth(int width);
+    void setContourWidth(int width);
+    void setHighEdge(int value);
+    void setLowEdge(int value);
     int getBlur(){return blur_size;}
     int getLineWidth(){return edge_line_width;}
     int getContourWidth(){return contour_line_width;}
     int getHighEdge(){return high_edge_threshold;}
     int getLowEdge(){return low_edge_threshold;}
-    void Save(string filename);
+    bool getGaussian(){return b_gaussian;}
+    void setGaussian(bool b){b_gaussian = b;}
 };
 #endif /*__DECOLOR_HPP_H_INCLUDED*/

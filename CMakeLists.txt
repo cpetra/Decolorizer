@@ -10,10 +10,10 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-#d: d:\work\opencv\build\install\OpenCVConfig.cmake
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets  REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets  REQUIRED)
 find_package(Qt6PrintSupport REQUIRED)
+# If on windows, change the path to the local one.
 find_package( OpenCV REQUIRED PATHS "d:/work/opencv/build/install")
 
 set(PROJECT_SOURCES
