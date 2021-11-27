@@ -19,6 +19,9 @@ The decoloring is done in several steps:
 The resulting image can be saved, either from the dialog or by using the "Show Image" button which presents an OpenCV widget with saving menu.
 The interface supports also printing using the QT related libraries, but not tested thoroughly.
 
+##  About the code
+This is a simple mockup of a generic "Decolor" class and its usage from a QT application. No effort was spent on debugging, neither on making this a "nice" componenent. It works as intended so far, and it was my actual take on checking out what QT and OpenCV can do together, in a portable way.
+
 ## ToDo
 The algorithms can be improved. Probably performing adding contrast first might ease the overall output.
 Also, different settings for the line/contour detection will probably yield better results.
