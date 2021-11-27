@@ -12,30 +12,34 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/imgproc.hpp"
 #include "Decolor.hpp"
+#include <fstream>
 
 using namespace std;
 using namespace cv;
 
-Decolor::Decolor(string filename, string window_name)
+Decolor::Decolor(string filename)
 {
     defaults();
     this->filename = filename;
-    this->window_name = window_name;
+    ifstream f;
+    f.open(filename);
+    if (!f) {
+        return;
+    }
+    f.close();
     this->image = imread(filename, 1);
-    this->state_ok = !!(this->image.data);
 
-    if (this->state_ok) {
+    if (this->ok()) {
         this->output_blank = Mat::zeros( this->image.size(), CV_8UC3 );
         this->output_blank.setTo(Scalar(255,255,255));
 
         this->controls = Mat::zeros( Size(320, 160), CV_8UC3 );
         this->controls.setTo(Scalar(255,255,255));
 
-
         blank();
         grayBlur();
-        Edges();
-        Lines();
+        doEdges();
+        doLines();
         doContours();
     }
  //   namedWindow(window_name, WINDOW_AUTOSIZE);
@@ -75,7 +79,7 @@ void Decolor::grayBlur()
     }
 }
 
-void Decolor::Edges()
+void Decolor::doEdges()
 {
     Canny( img_blur, img_edges, low_edge_threshold, high_edge_threshold);
 }
@@ -86,8 +90,9 @@ void Decolor::blank()
 }
 
 
-void Decolor::Lines()
+void Decolor::doLines()
 {
+    vector<Vec4i> lines;
     const double theta = 3.141 / 180.0;
     HoughLinesP(img_edges, lines, rho, theta, threshold, min_line_length, max_line_gap);
 
@@ -99,6 +104,9 @@ void Decolor::Lines()
 
 void Decolor::doContours()
 {
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+
     findContours( img_edges, contours, hierarchy, RETR_TREE, CHAIN_APPROX_TC89_KCOS );
     for( size_t i = 0; i< contours.size(); i++ )
     {
@@ -114,8 +122,8 @@ void Decolor::update()
 
     blank();
     grayBlur();
-    Edges();
-    Lines();
+    doEdges();
+    doLines();
     doContours();
 }
 
@@ -125,9 +133,9 @@ void Decolor::display()
         return;
     }
     Mat output2;
-    imshow(window_name, image);
-    imshow("output", output);
-    imshow("controls", controls);
+    imshow(input_window_name, image);
+    imshow(output_window_name, output);
+    imshow(control_window_name, controls);
 }
 
 void Decolor::displayOutput()
@@ -136,12 +144,12 @@ void Decolor::displayOutput()
         return;
     }
     if(output_is_shown) {
-        destroyWindow("output");
+        destroyWindow(output_window_name);
     }
     output_is_shown = true;
-    imshow("output", output);
+    imshow(output_window_name, output);
     // This does not seem to work if shown a second time, not sure why.
-    setWindowProperty("output", WND_PROP_TOPMOST, 1);
+    setWindowProperty(output_window_name, WND_PROP_TOPMOST, 1);
 }
 
 void my_callback(int v, void* data)
@@ -164,9 +172,19 @@ void Decolor::SetupTrackbar(string name, int* pvalue, int max)
         return t;
     };
     trackbars[name] = dLambda(this, pvalue);
-    createTrackbar(name, "controls", NULL, max, my_callback, static_cast<void *>(trackbars[name]) );
-    setTrackbarPos(name, "controls", *pvalue);
+    createTrackbar(name, control_window_name, NULL, max, my_callback, static_cast<void *>(trackbars[name]) );
+    setTrackbarPos(name, control_window_name, *pvalue);
 
+}
+
+bool Decolor::getB_gaussian() const
+{
+    return b_gaussian;
+}
+
+void Decolor::setB_gaussian(bool newB_gaussian)
+{
+    b_gaussian = newB_gaussian;
 }
 
 void Decolor::SetupTrackbarMaps()
@@ -176,10 +194,6 @@ void Decolor::SetupTrackbarMaps()
     SetupTrackbar("Contour Line Width", &this->contour_line_width, 10);
     SetupTrackbar("High Edge Threshold", &this->high_edge_threshold, 255);
     SetupTrackbar("Low Edge Threshold", &this->low_edge_threshold, 255);
-}
-
-void Decolor::setTrackbar(string name, int min, int max)
-{
 }
 
 Decolor::~Decolor()
@@ -215,13 +229,13 @@ void Decolor::save(string filename)
     imwrite(filename, output);
 }
 
-void Decolor::getImages(const Mat ** image , const Mat ** output)
+void Decolor::getImages(const Mat **image , const Mat **output)
 {
     *image = &this->image;
     *output = &this->output;
 }
 
-void Decolor::getOutputImage(const Mat ** output)
+void Decolor::getOutputImage(const Mat **  output)
 {
     *output = &this->output;
 }

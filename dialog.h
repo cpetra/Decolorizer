@@ -1,3 +1,10 @@
+/******************************************************************************
+ * @Date    : 2021-11-23 17:08:25
+ * @Author  : Constantin Petra (constantin.petra@gmail.com)
+ * @Link    : http://github.com/cpetra
+ * @Version : $Id$
+ *
+******************************************************************************/
 #ifndef DIALOG_H
 #define DIALOG_H
 
@@ -20,24 +27,14 @@ public:
 
 private slots:
     void on_btn_open_file_clicked();
-
     void on_hs_blursize_valueChanged(int value);
-
     void on_hs_contour_width_valueChanged(int value);
-
-
     void on_hs_line_width_valueChanged(int value);
-
     void on_btn_show_output_clicked();
-
     void on_hs_low_edge_valueChanged(int value);
-
     void on_hs_high_edge_valueChanged(int value);
-
     void on_btn_save_file_clicked();
-
     void on_btn_print_clicked();
-
     void on_cb_gaussian_toggled(bool checked);
 
 private:

@@ -1,3 +1,10 @@
+/******************************************************************************
+ * @Date    : 2021-11-23 17:08:25
+ * @Author  : Constantin Petra (constantin.petra@gmail.com)
+ * @Link    : http://github.com/cpetra
+ * @Version : $Id$
+ *
+******************************************************************************/
 #include "Decolor.hpp"
 #include "dialog.h"
 #include <QFileDialog>
@@ -39,7 +46,7 @@ void Dialog::displayImage(const Mat *pmat, QLabel *pwnd)
 
 bool Dialog::initDecolor(QString filename)
 {
-    p_decolor = new Decolor(filename.toStdString(), "My window");
+    p_decolor = new Decolor(filename.toStdString());
     if (!p_decolor->ok()) {
         return false;
     }

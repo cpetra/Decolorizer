@@ -33,16 +33,22 @@ private:
     Mat output_blank;   // use this as canvas for the output
     Mat output;
     Mat controls;
+
+    const string input_window_name = "Original";
+    const string output_window_name = "Output";
+    const string control_window_name = "Control";
+
+    // original image name
     string filename;
-    string window_name;
+
     bool output_is_shown;
 
+    // blur settings
     bool b_gaussian;
-    int blur_size;      // blur algorithm size
+    int blur_size;
 
-    bool state_ok = false;
 
-    // edge detection 
+    // edge detection
     int low_edge_threshold;
     int high_edge_threshold;
 
@@ -51,14 +57,8 @@ private:
     int threshold;
     int min_line_length;
     int max_line_gap;
-    vector<Vec4i> lines;
-
     int edge_line_width;
     int contour_line_width;
-
-    // contours
-    vector<vector<Point> > contours;
-    vector<Vec4i> hierarchy;
 
     // trackbars
     std::map<std::string, DecolorTracker *> trackbars;
@@ -70,31 +70,38 @@ private:
     void blank();
     void doContours();
     void grayBlur();
-    void Edges();
-    void Lines();
+    void doEdges();
+    void doLines();
+
 public:
-    Decolor(string filename, string display_window);
-    void display();
-    void displayOutput();
-    void update();
-    void save(string filename);
-    void setTrackbar(string name, int min, int max);
-    bool ok() {return state_ok;}
+    Decolor(string filename);
     ~Decolor();
-    void getImages(const Mat ** image, const Mat ** output);
-    void getOutputImage(const Mat ** const image);
-    // Interface parts;
+    bool ok() {return !!(this->image.data);}
+
+    void display();             // show all windows, meant for standalone usage
+    void displayOutput();       // show only output
+
+    void update();              // do all calculations
+    void save(string filename); // save the image
+
+    void getImages(const Mat **image, const Mat **output);
+    void getOutputImage(const Mat **image);
+
+    // Interface
     void setBlur(int blur);
     void setLineWidth(int width);
     void setContourWidth(int width);
     void setHighEdge(int value);
     void setLowEdge(int value);
+    void setGaussian(bool b){b_gaussian = b;}
+
     int getBlur(){return blur_size;}
     int getLineWidth(){return edge_line_width;}
     int getContourWidth(){return contour_line_width;}
     int getHighEdge(){return high_edge_threshold;}
     int getLowEdge(){return low_edge_threshold;}
     bool getGaussian(){return b_gaussian;}
-    void setGaussian(bool b){b_gaussian = b;}
+    bool getB_gaussian() const;
+    void setB_gaussian(bool newB_gaussian);
 };
 #endif /*__DECOLOR_HPP_H_INCLUDED*/
