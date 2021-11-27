@@ -177,17 +177,6 @@ void Decolor::SetupTrackbar(string name, int* pvalue, int max)
     setTrackbarPos(name, control_window_name, *pvalue);
 
 }
-
-bool Decolor::getB_gaussian() const
-{
-    return b_gaussian;
-}
-
-void Decolor::setB_gaussian(bool newB_gaussian)
-{
-    b_gaussian = newB_gaussian;
-}
-
 void Decolor::SetupTrackbarMaps()
 {
     SetupTrackbar("Blur Size", &this->blur_size, 20);

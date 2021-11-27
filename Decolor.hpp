@@ -95,13 +95,11 @@ public:
     void setLowEdge(int value);
     void setGaussian(bool b){b_gaussian = b;}
 
-    int getBlur(){return blur_size;}
-    int getLineWidth(){return edge_line_width;}
-    int getContourWidth(){return contour_line_width;}
-    int getHighEdge(){return high_edge_threshold;}
-    int getLowEdge(){return low_edge_threshold;}
-    bool getGaussian(){return b_gaussian;}
-    bool getB_gaussian() const;
-    void setB_gaussian(bool newB_gaussian);
+    int getBlur() const {return blur_size;}
+    int getLineWidth() const {return edge_line_width;}
+    int getContourWidth() const {return contour_line_width;}
+    int getHighEdge() const {return high_edge_threshold;}
+    int getLowEdge() const {return low_edge_threshold;}
+    bool getGaussian() const {return b_gaussian;}
 };
 #endif /*__DECOLOR_HPP_H_INCLUDED*/
