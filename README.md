@@ -4,6 +4,10 @@ If you have kids into coloring, this might be for you.
 As they always want to color something that's already colored, we sometimes need to do some painful paintbrush work.
 So here we try to do this automatically.
 
+## Screenshots
+![Program screenshot](/img/screenshot.png)
+![Output result](/img/output.png)
+
 ##  Description
 The code combines contours and lines detection using OpenCV.
 The decoloring is done in several steps:
