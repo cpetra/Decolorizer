@@ -34,6 +34,7 @@ void Dialog::showEvent(QShowEvent *evt)
 
     }
 }
+
 void Dialog::displayImage(const Mat *pmat, QLabel *pwnd)
 {
     QRect r;
@@ -207,4 +208,3 @@ void Dialog::on_cb_gaussian_toggled(bool checked)
     p_decolor->update();
     showProcessed();
 }
-

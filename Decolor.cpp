@@ -28,6 +28,7 @@ Decolor::Decolor(string filename)
     }
     f.close();
     this->image = imread(filename, 1);
+    cvtColor(this->image, this->image, COLOR_BGR2RGB);
 
     if (this->ok()) {
         this->output_blank = Mat::zeros( this->image.size(), CV_8UC3 );
